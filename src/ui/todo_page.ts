@@ -138,7 +138,7 @@ export class TodoPage {
     expect(tasksCount).toBe(expectedCount);
   };
 
-  async expectLastTaskTitle(expectedTitle: string) {
+  async expectLastTodoTitle(expectedTitle: string) {
     const lastTask = this.todoItems.last();
     await expect(lastTask.locator('label')).toHaveText(expectedTitle);
   };

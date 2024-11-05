@@ -23,10 +23,18 @@ test.describe('TodoPage tests', () => {
         const todoPage = new TodoPage(page);
         
         await todoPage.goto();
-        todoPage.interceptPostTodoRequest(todoTitle);
         await todoPage.addTodo(todoTitle);
         await todoPage.expectTodoToBeVisible(todoTitle);
         await todoPage.expectTodoNotCompleted(todoTitle);
+    });
+
+    test('Once user adds new todo request is sent', async ({ page }) => {
+        const todoTitle = faker.lorem.sentence()
+        const todoPage = new TodoPage(page);
+        
+        await todoPage.goto();
+        todoPage.interceptPostTodoRequest(todoTitle);
+        await todoPage.addTodo(todoTitle);
     });
 
     test('User can mark todo as done', async ({ request, page }) => {
@@ -75,9 +83,18 @@ test.describe('TodoPage tests', () => {
         const newToDoResponse = await todosEndpoint.createTodo(request, todoTitle);
         
         await todoPage.goto();
-        todoPage.interceptDeleteTodoRequest(newToDoResponse.id);
         await todoPage.deleteTodoByName(todoTitle);
         await todoPage.expectTodoNotToBeVisible(todoTitle);
+    });
+
+    test('Once user delets todo request is sent', async ({ request, page }) => {
+        const todoTitle = faker.lorem.sentence()
+        const todoPage = new TodoPage(page);
+        const newToDoResponse = await todosEndpoint.createTodo(request, todoTitle);
+        
+        await todoPage.goto();
+        todoPage.interceptDeleteTodoRequest(newToDoResponse.id);
+        await todoPage.deleteTodoByName(todoTitle);
     });
 
     test('Mutiple todos are displayed and new todo is added as last', async ({ request, page }) => {
@@ -89,7 +106,7 @@ test.describe('TodoPage tests', () => {
         await todoPage.addTodo(todoTitle);
         await todoPage.expectTodoToBeVisible(todoTitle);
         await todoPage.expectTodosCount(numberOfTodos+1);
-        await todoPage.expectLastTaskTitle(todoTitle);
+        await todoPage.expectLastTodoTitle(todoTitle);
     });
 
     test('User is not able to create task without title', async ({ page }) => {
