@@ -87,7 +87,7 @@ test.describe('TodoPage tests', () => {
         await todoPage.expectTodoNotToBeVisible(todoTitle);
     });
 
-    test('Once user delets todo request is sent', async ({ request, page }) => {
+    test('Once user deletes todo request is sent', async ({ request, page }) => {
         const todoTitle = faker.lorem.sentence()
         const todoPage = new TodoPage(page);
         const newToDoResponse = await todosEndpoint.createTodo(request, todoTitle);
