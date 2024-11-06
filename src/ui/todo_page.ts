@@ -1,151 +1,139 @@
 import { expect, Locator, Page } from '@playwright/test';
 
 export class TodoPage {
-  readonly page: Page;
-  readonly pageTtile: Locator;
-  readonly todoInput: Locator;
-  readonly todoItems: Locator;
-  readonly todoLabel:Locator;
-  readonly todoList: Locator;
-  readonly todoPageURL: string;
+    readonly page: Page;
+    readonly pageTtile: Locator;
+    readonly todoInput: Locator;
+    readonly todoItems: Locator;
+    readonly todoLabel: Locator;
+    readonly todoList: Locator;
+    readonly pageUrl: string;
 
-  constructor(page: Page) {
-    this.page = page;
-    this.pageTtile = page.locator('h1');
-    this.todoInput = page.locator('.new-todo');
-    this.todoList = page.locator('.todo-list');
-    this.todoItems = page.locator('.todo-list li');
-    this.todoLabel = page.locator('label');
-    this.todoPageURL = "http://localhost:3000"
-  };
+    constructor(page: Page) {
+        this.page = page;
+        this.pageTtile = page.locator('h1');
+        this.todoInput = page.locator('.new-todo');
+        this.todoList = page.locator('.todo-list');
+        this.todoItems = page.locator('.todo-list li');
+        this.todoLabel = page.locator('label');
+        this.pageUrl = process.env.TODO_PAGE_URL as string;
+    }
 
-  async goto() {
-    await this.page.goto(this.todoPageURL);
-  };
+    async goto() {
+        await this.page.goto(this.pageUrl);
+    }
 
-  async expectPageTitle() {
-    await expect(this.pageTtile).toBeVisible();
-    await expect(this.pageTtile).toHaveText('todos');
-  };
+    async assertPageTitle() {
+        await expect(this.pageTtile).toBeVisible();
+        await expect(this.pageTtile).toHaveText('todos');
+    }
 
-  async expectTodoInputToBeVisible() {
-    await expect(this.todoInput).toBeVisible();
-  };
+    async assertTodoInputToBeVisible() {
+        await expect(this.todoInput).toBeVisible();
+    }
 
-  async addTodo(todoText: string) {
-    await this.todoInput.fill(todoText);
-    await this.todoInput.press('Enter');
-  };
+    async addTodo(todoText: string) {
+        await this.todoInput.fill(todoText);
+        await this.todoInput.press('Enter');
+    }
 
-  async expectTodoToBeVisible(todoText: string) {
-    await expect(this.todoLabel.filter({ hasText: todoText })).toBeVisible({ timeout: 5000 });
-  };
+    async assertTodoToBeVisible(todoText: string) {
+        await expect(this.todoLabel.filter({ hasText: todoText })).toBeVisible({
+            timeout: 5000,
+        });
+    }
 
-  async expectTodoNotToBeVisible(todoText: string) {
-    await expect(this.todoLabel.filter({ hasText: todoText })).not.toBeVisible({ timeout: 5000 });
-  };
+    async assertTodoNotToBeVisible(todoText: string) {
+        await expect(this.todoLabel.filter({ hasText: todoText })).not.toBeVisible({
+            timeout: 5000,
+        });
+    }
 
-  async deleteTodoByName(todoText: string) {
-    const todoItem = this.todoItems.filter({ hasText: todoText });
-    const toodoDestroy = todoItem.locator('.destroy')
+    async deleteTodoByName(todoText: string) {
+        const todoItem = this.todoItems.filter({ hasText: todoText });
+        const toodoDestroy = todoItem.locator('.destroy');
 
-    await expect(todoItem).toBeVisible();
-    await todoItem.hover();
-    await expect(toodoDestroy).toBeVisible();
-    await toodoDestroy.click();
-  };
+        await expect(todoItem).toBeVisible();
+        await todoItem.hover();
+        await expect(toodoDestroy).toBeVisible();
+        await toodoDestroy.click();
+    }
 
-  async expectTodoNotCompleted(todoText: string) {
-    const todoItem = this.todoItems.filter({ hasText: todoText });
-    const toggleCheckbox = todoItem.locator('.toggle');
-    const label = todoItem.locator('label');
+    async assertTodoIsNotCompleted(todoText: string) {
+        const todoItem = this.todoItems.filter({ hasText: todoText });
+        const toggleCheckbox = todoItem.locator('.toggle');
+        const label = todoItem.locator('label');
 
-    await expect(toggleCheckbox).not.toBeChecked();
-    await expect(label).toHaveCSS('text-decoration', 'none solid rgb(77, 77, 77)');
-  };
+        await expect(toggleCheckbox).not.toBeChecked();
+        await expect(label).toHaveCSS('text-decoration', 'none solid rgb(77, 77, 77)');
+    }
 
-  async expectTodoCompleted(todoText: string) {
-    const todoItem = this.todoItems.filter({ hasText: todoText });
-    const toggleCheckbox = todoItem.locator('.toggle');
-    const label = todoItem.locator('label');
+    async assertTodoIsCompleted(todoText: string) {
+        const todoItem = this.todoItems.filter({ hasText: todoText });
+        const toggleCheckbox = todoItem.locator('.toggle');
+        const label = todoItem.locator('label');
 
-    await expect(toggleCheckbox).toBeChecked();
-    await expect(label).toHaveCSS('text-decoration', 'line-through solid rgb(217, 217, 217)');
-  }
+        await expect(toggleCheckbox).toBeChecked();
+        await expect(label).toHaveCSS('text-decoration', 'line-through solid rgb(217, 217, 217)');
+    }
 
-  async markTodoAsCompleted(todoText: string) {
-    const todoItem = this.todoItems.filter({ hasText: todoText });
-    const toggleCheckbox = todoItem.locator('.toggle');
+    async markTodoAsCompleted(todoText: string) {
+        const todoItem = this.todoItems.filter({ hasText: todoText });
+        const toggleCheckbox = todoItem.locator('.toggle');
 
-    await toggleCheckbox.check();
-  }
+        await toggleCheckbox.check();
+    }
 
-  async markTodoAsNotCompleted(todoText: string) {
-    const todoItem = this.todoItems.filter({ hasText: todoText });
-    const toggleCheckbox = todoItem.locator('.toggle');
+    async markTodoAsNotCompleted(todoText: string) {
+        const todoItem = this.todoItems.filter({ hasText: todoText });
+        const toggleCheckbox = todoItem.locator('.toggle');
 
-    await toggleCheckbox.uncheck();
-  }
+        await toggleCheckbox.uncheck();
+    }
 
-  async interceptPostTodoRequest(expectedTitle: string) {
-    const request = await this.page.waitForRequest(
-      (request) =>
-        request.url() === this.todoPageURL + '/todos' &&
-        request.method() === 'POST'
-    );
-    expect(request.method()).toBe('POST');
-    expect(request.url()).toBe(this.todoPageURL + '/todos');
-  
-    const headers = request.headers();
-    expect(headers['content-type']).toBe('application/json;charset=UTF-8');
-  
-    const postData = JSON.parse(request.postData() || '{}');
-    expect(postData).toHaveProperty('title', expectedTitle);
-    expect(postData).toHaveProperty('completed', false);
-    expect(postData).toHaveProperty('id');
-    expect(typeof postData.id).toBe('string');
-  }
+    async interceptPostTodoRequest(expectedTitle: string) {
+        const request = await this.page.waitForRequest(
+            (request) =>
+                request.url() === this.todoPageURL + '/todos' && request.method() === 'POST',
+        );
+        const headers = request.headers();
+        expect(headers['content-type']).toBe('application/json;charset=UTF-8');
 
-  async interceptToggleStatus(todoId: string, completed: boolean = false) {
-    const request = await this.page.waitForRequest(
-      (request) =>
-        request.url() === this.todoPageURL + `/todos/${todoId}` &&
-        (request.method() === 'PATCH' || request.method() === 'PUT')
-    );
+        const postData = JSON.parse(request.postData() || '{}');
+        await expect(postData).toHaveProperty('title', expectedTitle);
+        await expect(postData).toHaveProperty('completed', false);
+        await expect(postData).toHaveProperty('id');
+        await expect(typeof postData.id).toBe('string');
+    }
 
-    expect(request.method()).toMatch(/PATCH|PUT/);
-    expect(request.url()).toBe(this.todoPageURL + `/todos/${todoId}`);
-  
-    const postData = JSON.parse(request.postData() || '{}');
-    expect(postData).toHaveProperty('completed', completed);
-    expect(postData).toHaveProperty('id', todoId);
-  };
-  
-  async interceptDeleteTodoRequest(todoId: string) {
-    const request = await this.page.waitForRequest(
-      (request) =>
-        request.url() === this.todoPageURL + `/todos/${todoId}` &&
-        request.method() === 'DELETE'
-    );
-  
-    expect(request.method()).toBe('DELETE');
-    expect(request.url()).toBe(this.todoPageURL + `/todos/${todoId}`);
-  };
-  
+    async interceptToggleStatus(todoId: string, completed: boolean = false) {
+        const request = await this.page.waitForRequest(
+            (request) =>
+                request.url() === this.todoPageURL + `/todos/${todoId}` &&
+                (request.method() === 'PATCH' || request.method() === 'PUT'),
+        );
+        const postData = JSON.parse(request.postData() || '{}');
+        await expect(postData).toHaveProperty('completed', completed);
+        await expect(postData).toHaveProperty('id', todoId);
+    }
 
-  async expectTodosCount(expectedCount: number) {
-    const tasksCount = await this.todoItems.count();
-    expect(tasksCount).toBe(expectedCount);
-  };
+    async interceptDeleteTodoRequest(todoId: string) {
+        const request = await this.page.waitForRequest(
+            (request) =>
+                request.url() === this.todoPageURL + `/todos/${todoId}` &&
+                request.method() === 'DELETE',
+        );
+        await expect(request.method()).toBe('DELETE');
+        await expect(request.url()).toBe(this.todoPageURL + `/todos/${todoId}`);
+    }
 
-  async expectLastTodoTitle(expectedTitle: string) {
-    const lastTask = this.todoItems.last();
-    await expect(lastTask.locator('label')).toHaveText(expectedTitle);
-  };
+    async assertTodosCount(expectedCount: number) {
+        const tasksCount = await this.todoItems.count();
+        await expect(tasksCount).toBe(expectedCount);
+    }
 
-  async tryAddEmptyTodo() {
-    await this.todoInput.fill('')
-    await this.todoInput.press('Enter');
-  };
-};
-
+    async assertLastTodoTitle(expectedTitle: string) {
+        const lastTask = this.todoItems.last();
+        await expect(lastTask.locator('label')).toHaveText(expectedTitle);
+    }
+}
