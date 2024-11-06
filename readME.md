@@ -13,17 +13,17 @@ This project is a Todo application with end-to-end (E2E) tests written using [Pl
 npm install
 ```
 
-2. Install dependencies:
+2. Install playwright dependencies:
 ```bash
 npx playwright install
 ```
 
-3. To start the Todo application:
+3. Start the Todo application:
 ```bash
 npm start
 ```
 
-4. Configure Environment Variables:
+4. Configure Environment Variables in **todo.env** file:
 ```bash
 TODO_PAGE_URL=http://localhost:3000
 ```
