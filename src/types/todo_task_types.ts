@@ -1,8 +1,7 @@
 export interface Task {
     completed: boolean;
     id: string;
-    title: string
+    title: string;
 }
 
-export interface TaskArray extends Array<Task> {};
-
+export interface TaskArray extends Array<Task> {}
