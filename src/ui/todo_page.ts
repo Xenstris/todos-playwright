@@ -2,30 +2,30 @@ import { expect, Locator, Page } from '@playwright/test';
 
 export class TodoPage {
     readonly page: Page;
-    readonly pageTtile: Locator;
+    readonly pageTitle: Locator;
     readonly todoInput: Locator;
     readonly todoItems: Locator;
     readonly todoLabel: Locator;
     readonly todoList: Locator;
-    readonly pageUrl: string;
+    readonly todoPageURL: string;
 
     constructor(page: Page) {
         this.page = page;
-        this.pageTtile = page.locator('h1');
+        this.pageTitle = page.locator('h1');
         this.todoInput = page.locator('.new-todo');
         this.todoList = page.locator('.todo-list');
         this.todoItems = page.locator('.todo-list li');
         this.todoLabel = page.locator('label');
-        this.pageUrl = process.env.TODO_PAGE_URL as string;
+        this.todoPageURL = process.env.TODO_PAGE_URL as string;
     }
 
     async goto() {
-        await this.page.goto(this.pageUrl);
+        await this.page.goto(this.todoPageURL);
     }
 
     async assertPageTitle() {
-        await expect(this.pageTtile).toBeVisible();
-        await expect(this.pageTtile).toHaveText('todos');
+        await expect(this.pageTitle).toBeVisible();
+        await expect(this.pageTitle).toHaveText('todos');
     }
 
     async assertTodoInputToBeVisible() {
