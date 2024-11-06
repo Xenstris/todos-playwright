@@ -7,7 +7,7 @@ export class TodoPage {
     readonly todoItems: Locator;
     readonly todoLabel: Locator;
     readonly todoList: Locator;
-    readonly todoPageURL: string;
+    readonly pageUrl: string;
 
     constructor(page: Page) {
         this.page = page;
@@ -16,11 +16,11 @@ export class TodoPage {
         this.todoList = page.locator('.todo-list');
         this.todoItems = page.locator('.todo-list li');
         this.todoLabel = page.locator('label');
-        this.todoPageURL = 'http://localhost:3000';
+        this.pageUrl = process.env.TODO_PAGE_URL as string;
     }
 
     async goto() {
-        await this.page.goto(this.todoPageURL);
+        await this.page.goto(this.pageUrl);
     }
 
     async assertPageTitle() {

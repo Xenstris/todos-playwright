@@ -8,6 +8,7 @@ test.beforeEach('Clean environment before each test', async ({ request }) => {
     await cleanUp.deleteAllTodos(request);
 });
 
+//All tests have passed request and page because the application needs browser context
 test.describe('Todos endpoint tests', () => {
     test('Create todo', async ({ request, page }) => {
         await todosEndpoint.createTodo(request);

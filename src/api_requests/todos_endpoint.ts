@@ -1,7 +1,7 @@
 import { APIRequestContext } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-const endpoint = 'http://localhost:3000/todos';
+const endpoint = (process.env.TODO_PAGE_URL as string) + '/todos';
 
 export const todosEndpoint = {
     async getAllTodos(apiContext: APIRequestContext) {
