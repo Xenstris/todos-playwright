@@ -2,7 +2,7 @@ import { expect, Locator, Page } from '@playwright/test';
 
 export class TodoPage {
     readonly page: Page;
-    readonly pageTitle: Locator;
+    readonly pageTtile: Locator;
     readonly todoInput: Locator;
     readonly todoItems: Locator;
     readonly todoLabel: Locator;
@@ -11,7 +11,7 @@ export class TodoPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.pageTitle = page.locator('h1');
+        this.pageTtile = page.locator('h1');
         this.todoInput = page.locator('.new-todo');
         this.todoList = page.locator('.todo-list');
         this.todoItems = page.locator('.todo-list li');
@@ -24,8 +24,8 @@ export class TodoPage {
     }
 
     async assertPageTitle() {
-        await expect(this.pageTitle).toBeVisible();
-        await expect(this.pageTitle).toHaveText('todos');
+        await expect(this.pageTtile).toBeVisible();
+        await expect(this.pageTtile).toHaveText('todos');
     }
 
     async assertTodoInputToBeVisible() {
@@ -59,7 +59,7 @@ export class TodoPage {
         await toodoDestroy.click();
     }
 
-    async assertTodoNotCompleted(todoText: string) {
+    async assertTodoIsNotCompleted(todoText: string) {
         const todoItem = this.todoItems.filter({ hasText: todoText });
         const toggleCheckbox = todoItem.locator('.toggle');
         const label = todoItem.locator('label');
@@ -68,7 +68,7 @@ export class TodoPage {
         await expect(label).toHaveCSS('text-decoration', 'none solid rgb(77, 77, 77)');
     }
 
-    async assertTodoCompleted(todoText: string) {
+    async assertTodoIsCompleted(todoText: string) {
         const todoItem = this.todoItems.filter({ hasText: todoText });
         const toggleCheckbox = todoItem.locator('.toggle');
         const label = todoItem.locator('label');
@@ -135,10 +135,5 @@ export class TodoPage {
     async assertLastTodoTitle(expectedTitle: string) {
         const lastTask = this.todoItems.last();
         await expect(lastTask.locator('label')).toHaveText(expectedTitle);
-    }
-
-    async tryAddEmptyTodo() {
-        await this.todoInput.fill('');
-        await this.todoInput.press('Enter');
     }
 }

@@ -1,4 +1,4 @@
-import { expect, test, request } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { cleanUp } from '../src/utils/clean_up';
 import { todosEndpoint } from '../src/api_requests/todos_endpoint';
 import { preconditions } from '../src/utils/preconditions';
@@ -23,7 +23,7 @@ test.describe('Todos endpoint tests', () => {
     });
 
     test('Create multiple todos', async ({ request, page }) => {
-        const numberOfTasks: number = await preconditions.createMutipleTodos(request);
+        const numberOfTasks: number = await preconditions.createMultipleTodos(request);
         const arrayOfTasks: TaskArray = await todosEndpoint.getAllTodos(request);
         expect(arrayOfTasks.length).toEqual(numberOfTasks);
     });

@@ -25,7 +25,7 @@ test.describe('TodoPage tests', () => {
         await todoPage.goto();
         await todoPage.addTodo(todoTitle);
         await todoPage.assertTodoToBeVisible(todoTitle);
-        await todoPage.assertTodoNotCompleted(todoTitle);
+        await todoPage.assertTodoIsNotCompleted(todoTitle);
     });
 
     test('Request is sent when user adds new todo', async ({ page }) => {
@@ -44,7 +44,7 @@ test.describe('TodoPage tests', () => {
 
         await todoPage.goto();
         await todoPage.markTodoAsCompleted(todoTitle);
-        await todoPage.assertTodoCompleted(todoTitle);
+        await todoPage.assertTodoIsCompleted(todoTitle);
     });
 
     test('Request is sent when user marks todo as done', async ({ request, page }) => {
@@ -64,7 +64,7 @@ test.describe('TodoPage tests', () => {
 
         await todoPage.goto();
         await todoPage.markTodoAsNotCompleted(todoTitle);
-        await todoPage.assertTodoNotCompleted(todoTitle);
+        await todoPage.assertTodoIsNotCompleted(todoTitle);
     });
 
     test('Request is sent when user marks todo as not done', async ({ request, page }) => {
@@ -103,7 +103,7 @@ test.describe('TodoPage tests', () => {
     }) => {
         const todoTitle = faker.lorem.sentence();
         const todoPage = new TodoPage(page);
-        const numberOfTodos = await preconditions.createMutipleTodos(request);
+        const numberOfTodos = await preconditions.createMultipleTodos(request);
 
         await todoPage.goto();
         await todoPage.addTodo(todoTitle);
@@ -116,7 +116,7 @@ test.describe('TodoPage tests', () => {
         const todoPage = new TodoPage(page);
 
         await todoPage.goto();
-        await todoPage.tryAddEmptyTodo();
+        await todoPage.addTodo('');
         await todoPage.assertTodosCount(0);
     });
 });
