@@ -22,7 +22,7 @@ export const todosEndpoint = {
         apiContext: APIRequestContext,
         title: string = faker.lorem.sentence(),
         completed: boolean = false,
-        id: string = Math.random().toString().substr(2, 10),
+        id: string = Math.random().toString().substring(2, 10),
         failOnStatusCode: boolean = true,
     ) {
         const addTodoResponse = await apiContext.post(endpoint, {
