@@ -8,25 +8,31 @@ This project is a Todo application with end-to-end (E2E) tests written using [Pl
 
 ## Setup
 
-1. Install dependencies:
+1. Change directory:
+
+```
+cd .\todos-playwright\
+```
+
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Install playwright browsers:
+3. Install playwright browsers:
 
 ```bash
 npx playwright install
 ```
 
-3. Start the Todo application:
+4. Start the Todo application:
 
 ```bash
 npm start
 ```
 
-4. Configure Environment Variables in **todo.env** file:
+5. Configure Environment Variables in **todo.env** file:
 
 ```bash
 TODO_PAGE_URL=http://localhost:3000
