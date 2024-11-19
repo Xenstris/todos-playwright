@@ -12,10 +12,10 @@ export class TodoPage {
     constructor(page: Page) {
         this.page = page;
         this.pageTitle = page.locator('h1');
-        this.todoInput = page.locator('.new-todo');
+        this.todoInput = page.locator('.new-todo'); //With access to repo as qa, we can also add ours locators like [data-test-id="todo-input-field"]
         this.todoList = page.locator('.todo-list');
         this.todoItems = page.locator('.todo-list li');
-        this.todoLabel = page.locator('label');
+        this.todoLabel = page.locator('label'); //With access to repo as qa, we can also add ours locators like [data-test-id="name-of-todo"]
         this.todoPageURL = process.env.TODO_PAGE_URL as string;
     }
 
